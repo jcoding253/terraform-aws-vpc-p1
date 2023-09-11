@@ -6,6 +6,6 @@ If you wanted to try the script you would need to run these terminal commands to
     $ terraform init
     $ terraform apply
 
-Prior to running the script you also need to establish credentials access. I suggest setting up SSO with AWS Config. 
+Prior to running the script you also need to establish credentials access. I suggest setting up SSO with AWS Config.
 
 I saved my steps in the file "aws_sso_setup_directions.md"
