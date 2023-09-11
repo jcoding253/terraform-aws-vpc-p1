@@ -11,11 +11,16 @@ to initialize the repository and then,
     
 to run the code.
 
+
 Prior to running the script you also need to establish credentials access. I suggest setting up SSO with AWS Config. Here's what I did:
+
 References
-	https://docs.aws.amazon.com/cli/latest/userguide/sso-configure-profile-token.html
-	https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html
-	https://www.youtube.com/watch?v=CfA-pOQK8Fg
+
+    https://docs.aws.amazon.com/cli/latest/userguide/sso-configure-profile-token.html
+
+    https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html
+	
+    https://www.youtube.com/watch?v=CfA-pOQK8Fg
 
 Create Group, User, link account permission, create custom url
     Go to IAM Identity Center
