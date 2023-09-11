@@ -1,0 +1,6 @@
+# Ignore all files and directories
+/*
+!/.gitignore
+!/aws_sso_setup_directions.md
+!/main.tf
+!/README.md
