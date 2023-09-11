@@ -2,9 +2,13 @@
 My first Terraform project exploring IaC with AWS tasks.
 
 If you wanted to try the script you would need to run the terminal command
+
     $ terraform init
+    
 to initialize the repository and then,
+
     $ terraform apply
+    
 to run the code.
 
 Prior to running the script you also need to establish credentials access. I suggest setting up SSO with AWS Config. Here's what I did:
