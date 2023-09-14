@@ -131,7 +131,7 @@ resource "aws_vpc_security_group_egress_rule" "egress_all" {
 resource "aws_network_interface" "web-server-nic" {
   subnet_id       = aws_subnet.public-subnet-1.id
   private_ips     = ["10.0.1.50"]
-  vpc_security_group_ids = [aws_security_group.allow-web-1.id]
+  security_groups = [aws_security_group.allow-web-1.id]
 }
 
 

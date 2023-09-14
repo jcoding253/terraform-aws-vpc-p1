@@ -4,3 +4,4 @@
 !/aws_sso_setup_directions.md
 !/main.tf
 !/README.md
+!/graph.svg
