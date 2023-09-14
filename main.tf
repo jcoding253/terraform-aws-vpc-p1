@@ -97,7 +97,6 @@ resource "aws_security_group" "allow-web-1" {
 
 resource "aws_vpc_security_group_ingress_rule" "ingress_ssh" {
   security_group_id = aws_security_group.allow-web-1.id
-
   cidr_ipv4 = "0.0.0.0/0"
   from_port   = 22
   to_port     = 22
@@ -106,7 +105,6 @@ resource "aws_vpc_security_group_ingress_rule" "ingress_ssh" {
 
 resource "aws_vpc_security_group_ingress_rule" "ingress_http" {
   security_group_id = aws_security_group.allow-web-1.id
-
   cidr_ipv4 = "0.0.0.0/0"
   from_port   = 80
   to_port     = 80
@@ -115,7 +113,6 @@ resource "aws_vpc_security_group_ingress_rule" "ingress_http" {
 
 resource "aws_vpc_security_group_ingress_rule" "ingress_https" {
   security_group_id = aws_security_group.allow-web-1.id
-
   cidr_ipv4 = "0.0.0.0/0"
   from_port   = 443
   to_port     = 443
@@ -124,7 +121,6 @@ resource "aws_vpc_security_group_ingress_rule" "ingress_https" {
 
 resource "aws_vpc_security_group_egress_rule" "egress_all" {
   security_group_id = aws_security_group.allow-web-1.id
-
   cidr_ipv4 = "0.0.0.0/0"
   ip_protocol = "-1"
 }
@@ -135,7 +131,7 @@ resource "aws_vpc_security_group_egress_rule" "egress_all" {
 resource "aws_network_interface" "web-server-nic" {
   subnet_id       = aws_subnet.public-subnet-1.id
   private_ips     = ["10.0.1.50"]
-  security_groups = [aws_security_group.allow-web-1.id]
+  vpc_security_group_ids = [aws_security_group.allow-web-1.id]
 }
 
 
@@ -160,14 +156,18 @@ resource "aws_instance" "web-server-1" {
   }
 
   user_data = <<-EOF
-                #!/bin/bash
-                sudo apt update -y
-                sudo apt install apache2 -y
-                sudo systemctl start apache2
-                sudo bash -c 'echo Real knowledge is to know the extent of one's ignorance. > /var/www/html/index.html'
-                EOF
+    #!/bin/bash
+    yum -y install httpd
+    echo "<h1>Real knowledge is to know the extent of one's ignorance.</h1>" /var/www/html/index.html
+    sudo systemctl enable httpd
+    sudo systemctl start httpd
+    EOF
 
   tags = {
     Name = "web-server-1"
   }
+}
+
+output "DNS" {
+  value = aws_instance.web-server-1.public_dns
 }
