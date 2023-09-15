@@ -32,7 +32,8 @@ Terminal, create configuration sessions and profiles for sso on local machine, c
 Terraform should now be able to use AWS CLI automatically. Here are some extras:
 
     Terminal cmd to log back in when session expires:
-        $ aws sso login --profile [admin1]
+        $ export AWS_PROFILE=[insert profile ex:admin1]
+        $ aws sso login --profile [insert profile ex:admin1]
     Terminal cmd to edit one of the config settings
         $ aws configure set [selected setting here] [text to insert] --profile [name]
         Ex: $ aws configure set region us-east-1 --profile admin1
