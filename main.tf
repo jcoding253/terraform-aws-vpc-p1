@@ -63,7 +63,6 @@ resource "aws_subnet" "public-subnet-1" {
   vpc_id     = aws_vpc.prod-vpc-1.id
   cidr_block = "10.0.1.0/24"
   availability_zone = "us-east-1a"
-
   tags = {
     Name = "public-subnet-1"
   }
@@ -167,6 +166,62 @@ user_data = <<-EOF
   }
 }
 
+
+# 10. Create Network ACL, just in case.
+resource "aws_network_acl" "web-nacl-1" {
+  vpc_id = aws_vpc.prod-vpc-1.id
+
+  # Ingress rules for allowing ssh 22, http 80, https 443.
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 50
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 22
+    to_port    = 22
+  }
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 100
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 80
+    to_port    = 80
+  }
+
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 150
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 443
+    to_port    = 443
+  }
+
+  # Egress rule for allowing all outgoing traffic
+  egress {
+    protocol   = "-1"
+    rule_no    = 200
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 0
+    to_port    = 0
+  }
+
+  tags = {
+    Name = "web-nacl-1"
+  }
+}
+
+
+# 11. Associate NACL with subnet 
+resource "aws_network_acl_association" "b" {
+  network_acl_id = aws_network_acl.web-nacl-1.id
+  subnet_id      = aws_subnet.public-subnet-1.id
+}
+
+
+# Prints DNS for future use and to prove web server successful launch.
 output "DNS" {
   value = aws_instance.web-server-1.public_dns
 }
