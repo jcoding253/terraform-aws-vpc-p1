@@ -144,7 +144,7 @@ resource "aws_eip" "web-eip-1" {
 
 # 9. Create Ubuntu server and install/enable apache2
 resource "aws_instance" "web-server-1" {
-  ami               = "ami-01c647eace872fc02"
+  ami               = "ami-053b0d53c279acc90"
   instance_type     = "t2.micro"
   availability_zone = "us-east-1a"
   key_name          = "web-key"
@@ -154,13 +154,13 @@ resource "aws_instance" "web-server-1" {
     network_interface_id = aws_network_interface.web-server-nic.id
   }
 
-  user_data = <<-EOF
-    #!/bin/bash
-    yum -y install httpd
-    echo "<h1>Real knowledge is to know the extent of one's ignorance.</h1>" /var/www/html/index.html
-    sudo systemctl enable httpd
-    sudo systemctl start httpd
-    EOF
+user_data = <<-EOF
+              #!/bin/bash
+              sudo apt update -y
+              sudo apt install apache2 -y
+              sudo systemctl start apache2
+              echo "Real knowledge is to know the extent of one's ignorance." | sudo tee /var/www/html/index.html
+              EOF
 
   tags = {
     Name = "web-server-1"
