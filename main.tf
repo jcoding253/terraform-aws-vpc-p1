@@ -2,7 +2,7 @@
 terraform {
   required_providers {
     aws = {
-      source = "hashicorp/aws"
+      source  = "hashicorp/aws"
       version = "5.16.1"
     }
   }
@@ -17,7 +17,7 @@ provider "aws" {
 # 1. Create vpc
 
 resource "aws_vpc" "prod-vpc-1" {
-  cidr_block       = "10.0.0.0/16"
+  cidr_block = "10.0.0.0/16"
 
   tags = {
     Name = "prod-vpc-1"
@@ -60,8 +60,8 @@ resource "aws_route_table" "prod-route-table-1" {
 # 4. Create a Subnet 
 
 resource "aws_subnet" "public-subnet-1" {
-  vpc_id     = aws_vpc.prod-vpc-1.id
-  cidr_block = "10.0.1.0/24"
+  vpc_id            = aws_vpc.prod-vpc-1.id
+  cidr_block        = "10.0.1.0/24"
   availability_zone = "us-east-1a"
   tags = {
     Name = "public-subnet-1"
@@ -88,7 +88,7 @@ resource "aws_security_group" "allow-web-1" {
     cidr_blocks = ["0.0.0.0/0"]
     from_port   = 22
     to_port     = 22
-    protocol = "tcp"
+    protocol    = "tcp"
   }
 
   ingress {
@@ -96,7 +96,7 @@ resource "aws_security_group" "allow-web-1" {
     cidr_blocks = ["0.0.0.0/0"]
     from_port   = 80
     to_port     = 80
-    protocol = "tcp"
+    protocol    = "tcp"
   }
 
   ingress {
@@ -104,14 +104,14 @@ resource "aws_security_group" "allow-web-1" {
     cidr_blocks = ["0.0.0.0/0"]
     from_port   = 443
     to_port     = 443
-    protocol = "tcp"
+    protocol    = "tcp"
   }
 
   egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
     Name = "allow-web-1"
@@ -138,7 +138,7 @@ resource "aws_eip" "web-eip-1" {
   domain                    = "vpc"
   network_interface         = aws_network_interface.web-server-nic.id
   associate_with_private_ip = "10.0.1.50"
-  depends_on = [aws_internet_gateway.prod-internet-gw-1]
+  depends_on                = [aws_internet_gateway.prod-internet-gw-1, aws_instance.web-server-1]
 }
 
 # 9. Create Ubuntu server and install/enable apache2
@@ -149,11 +149,11 @@ resource "aws_instance" "web-server-1" {
   key_name          = "web-key"
 
   network_interface {
-    device_index = 0
+    device_index         = 0
     network_interface_id = aws_network_interface.web-server-nic.id
   }
 
-user_data = <<-EOF
+  user_data = <<-EOF
               #!/bin/bash
               sudo apt update -y
               sudo apt install apache2 -y
