@@ -84,56 +84,36 @@ resource "aws_security_group" "allow-web-1" {
   description = "allow_tcp_traffic"
   vpc_id      = aws_vpc.prod-vpc-1.id
 
-  tags = {
-    Name = "allow-web-1"
+  ingress {
+    description = "ssh"
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
   }
 
-  # Avoids conflict with not being able to edit or delete security groups
-  lifecycle {
-    create_before_destroy = true
+  ingress {
+    description = "http"
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
   }
-}
 
-resource "aws_vpc_security_group_ingress_rule" "ingress_ssh" {
-  security_group_id = aws_security_group.allow-web-1.id
+  ingress {
+    description = "https"
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+  }
 
-  cidr_ipv4   = "0.0.0.0/0"
-  from_port   = 22
-  to_port     = 22
-  ip_protocol = "tcp"
-}
-
-resource "aws_vpc_security_group_ingress_rule" "ingress_http" {
-  security_group_id = aws_security_group.allow-web-1.id
-
-  cidr_ipv4   = "0.0.0.0/0"
-  from_port   = 80
-  to_port     = 80
-  ip_protocol = "tcp"
-}
-
-resource "aws_vpc_security_group_ingress_rule" "ingress_https" {
-  security_group_id = aws_security_group.allow-web-1.id
-
-  cidr_ipv4   = "0.0.0.0/0"
-  from_port   = 443
-  to_port     = 443
-  ip_protocol = "tcp"
-}
-
-resource "aws_vpc_security_group_egress_rule" "egress_all" {
-  security_group_id = aws_security_group.allow-web-1.id
-
-  cidr_ipv4   = "0.0.0.0/0"
-  ip_protocol = "-1"
-}
-
-# 6. Create Security Groups to allow port 22,80,443
-
-resource "aws_security_group" "allow-web-1" {
-  name        = "allow_web_traffic"
-  description = "allow_tcp_traffic"
-  vpc_id      = aws_vpc.prod-vpc-1.id
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
   tags = {
     Name = "allow-web-1"
@@ -145,39 +125,7 @@ resource "aws_security_group" "allow-web-1" {
   }
 }
 
-resource "aws_vpc_security_group_ingress_rule" "ingress_ssh" {
-  security_group_id = aws_security_group.allow-web-1.id
 
-  cidr_ipv4   = "0.0.0.0/0"
-  from_port   = 22
-  to_port     = 22
-  ip_protocol = "tcp"
-}
-
-resource "aws_vpc_security_group_ingress_rule" "ingress_http" {
-  security_group_id = aws_security_group.allow-web-1.id
-
-  cidr_ipv4   = "0.0.0.0/0"
-  from_port   = 80
-  to_port     = 80
-  ip_protocol = "tcp"
-}
-
-resource "aws_vpc_security_group_ingress_rule" "ingress_https" {
-  security_group_id = aws_security_group.allow-web-1.id
-
-  cidr_ipv4   = "0.0.0.0/0"
-  from_port   = 443
-  to_port     = 443
-  ip_protocol = "tcp"
-}
-
-resource "aws_vpc_security_group_egress_rule" "egress_all" {
-  security_group_id = aws_security_group.allow-web-1.id
-
-  cidr_ipv4   = "0.0.0.0/0"
-  ip_protocol = "-1"
-}
 # 7. Create a network interface with an ip in the subnet that was created in step 4
 
 resource "aws_network_interface" "web-server-nic" {
@@ -188,6 +136,7 @@ resource "aws_network_interface" "web-server-nic" {
 
 
 # 8. Assign an elastic IP to the network interface created in step 7
+
 resource "aws_eip" "web-eip-1" {
   domain                    = "vpc"
   network_interface         = aws_network_interface.web-server-nic.id
@@ -196,6 +145,7 @@ resource "aws_eip" "web-eip-1" {
 }
 
 # 9. Create Ubuntu server and install/enable apache2
+
 resource "aws_instance" "web-server-1" {
   ami               = "ami-053b0d53c279acc90"
   instance_type     = "t2.micro"
@@ -218,58 +168,4 @@ resource "aws_instance" "web-server-1" {
   tags = {
     Name = "web-server-1"
   }
-}
-
-
-# 10. Create Network ACL.
-resource "aws_network_acl" "web-nacl-1" {
-  vpc_id = aws_vpc.prod-vpc-1.id
-
-  # Ingress rules for allowing ssh 22, http 80, https 443.
-  ingress {
-    protocol   = "tcp"
-    rule_no    = 50
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 22
-    to_port    = 22
-  }
-  ingress {
-    protocol   = "tcp"
-    rule_no    = 100
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 80
-    to_port    = 80
-  }
-
-  ingress {
-    protocol   = "tcp"
-    rule_no    = 150
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 443
-    to_port    = 443
-  }
-
-  # Egress rule for allowing all outgoing traffic
-  egress {
-    protocol   = "-1"
-    rule_no    = 200
-    action     = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port  = 0
-    to_port    = 0
-  }
-
-  tags = {
-    Name = "web-nacl-1"
-  }
-}
-
-
-# 11. Associate NACL with subnet 
-resource "aws_network_acl_association" "b" {
-  network_acl_id = aws_network_acl.web-nacl-1.id
-  subnet_id      = aws_subnet.public-subnet-1.id
 }
