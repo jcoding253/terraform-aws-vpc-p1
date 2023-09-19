@@ -7,13 +7,11 @@
 
 #Future goals: In this project, I learned how to use repo branches to manage 3 versions of my project. For my next project, these are my goals: 
 
--create modulated environments for prod and dev
-
--explore the use of workspaces, variables.tf and auto.tfvars
-
--create a directory for examples and testing
-
--use the "Terraform Modules Directory" to put together my project rather than writing the code from scratch, documentation, and video resources like I have in the past. I have enough foundational knowledge to use copied resources, learn how they work and adjust them to my needs now. 
+    -create modulated environments for prod and dev
+    -explore the use of workspaces, variables.tf and auto.tfvars
+    -create a directory for examples and testing
+    -use the "Terraform Modules Directory" to put together my project rather than writing the code from scratch, 
+     documentation, and video resources like I have in the past. This will be much more efficient and versatile.
 
 #2 To start, prior to running the script you also need to establish credentials access. I suggest setting up SSO with AWS Config. I saved my steps in the file "aws_sso_setup_directions.md". I also had to go into the AWS EC2 console and generate a key-pair .pem file, which I saved in the ~/.ssh directory on my local machine. I named it "web-key", which needs to match the main.tf code under "aws_instance".
 
