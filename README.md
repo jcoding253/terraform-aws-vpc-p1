@@ -1,9 +1,9 @@
 # terraform-p1-aws
-#1 My first Terraform project exploring IaC by setting up a basic AWS web server. Using resources; VPC, Internet Gateway, Route Table, Subnet, Route Table Association, Security Group, Security Group Ingress, Security Group Egress, Network Interface, Elastic IP, EC2, NACLs, NACL Association. Reference video for this project: https://www.youtube.com/watch?v=SLB_c_ayRMo
+#1 My first Terraform project exploring IaC by setting up a basic AWS web server. Using resources; VPC, Internet Gateway, Route Table, Subnet, Route Table Association, Security Groups, Network Interface, Elastic IP, EC2. Reference video for this project: https://www.youtube.com/watch?v=SLB_c_ayRMo
 
-#Personal Challenges: I tried using separate aws_vpc_security_group_ingress_rule (and egress) for the aws_security_group as opposed to the inline rules that are currently being used in the code (as suggested by the documentation to avoid bugs with "tags" and "descriptions") but I was unable to make it work. And I wasn't able to find good documentation on it. So I had to stick with the old inline approach. 
+#Personal Challenges: I tried using separate "aws_vpc_security_group_ingress_rule" (and egress) for the "aws_security_group" as opposed to the inline rules that are currently being used in the code (as suggested by the documentation to avoid bugs with "tags" and "descriptions") but I was unable to make it work. And I wasn't able to find good documentation on it. So I had to stick with the old inline approach. 
 
-#Continued: I also, tried using NACL's which worked when I added them after I "terraform apply" the original code, added them to the code, saved and applied again. But if I tried to put them in the code from the start and then applied, it would be bugged. I never figured out why but it was out of the scope of the project so I just left them out for now.
+#Continued: I also, tried using "aws_network_acl" and "aws_network_acl_association" which worked when I added them after I "terraform apply" the original code, saved and applied again. But if I tried to put them in the code from the start and then applied, it would be bugged. I never figured out why but it was out of the scope of the project so I just left them out for now.
 
 #Future goals: In this project, I learned how to use repo branches to manage 3 versions of my project. For my next project, these are my goals: 
 
